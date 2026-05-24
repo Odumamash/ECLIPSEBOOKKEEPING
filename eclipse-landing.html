@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eclipse | Bookkeeping for Small Businesses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:#7A6128;
+    --ink:#0A0A0B;--ink-soft:#111114;--surface:#141417;--surface-lift:#1C1C21;
+    --border:rgba(201,168,76,0.18);--border-soft:rgba(255,255,255,0.06);
+    --text:#E8E4DC;--text-muted:#8A8680;--text-dim:#4A4845;
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--text);font-size:16px;line-height:1.6;overflow-x:hidden}
+
+  /* ── NAV ── */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 4rem;
+    height:80px;
+    background:rgba(10,10,11,0.92);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border)
+  }
+  .nav-logo{
+    display:flex;align-items:center;text-decoration:none;
+    height:100%;padding:10px 0;
+  }
+  .nav-logo img{
+    height:56px;width:auto;
+    object-fit:contain;object-position:left center;
+    display:block;
+  }
+  .nav-brand{display:none}
+  .nav-links{display:flex;align-items:center;gap:2.5rem;list-style:none}
+  .nav-links a{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color .2s}
+  .nav-links a:hover{color:var(--gold)}
+  .nav-cta{
+    font-size:.75rem!important;letter-spacing:.12em;
+    color:var(--gold)!important;border:1px solid var(--gold-dim);
+    padding:.5rem 1.4rem;border-radius:1px;
+    transition:background .2s,color .2s!important
+  }
+  .nav-cta:hover{background:var(--gold)!important;color:var(--ink)!important}
+
+  /* ── HERO ── */
+  .hero{
+    min-height:100vh;display:flex;align-items:center;
+    padding:8rem 4rem 5rem;position:relative;overflow:hidden;
+  }
+  .hero-bg{
+    position:absolute;inset:0;z-index:0;
+    background:
+      radial-gradient(ellipse 55% 65% at 62% 48%,rgba(201,168,76,0.06) 0%,transparent 70%),
+      radial-gradient(ellipse 30% 40% at 85% 20%,rgba(201,168,76,0.04) 0%,transparent 60%);
+  }
+  .hero-grid{
+    position:absolute;inset:0;z-index:0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.035) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(201,168,76,0.035) 1px,transparent 1px);
+    background-size:72px 72px;
+    mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 30%,transparent 100%);
+  }
+
+  /* Hero scene illustration */
+  .hero-scene{
+    position:absolute;right:0;top:0;bottom:0;
+    width:52%;z-index:1;pointer-events:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  .hero-content{position:relative;z-index:2;max-width:560px}
+
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:.7rem;
+    font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:2rem;
+  }
+  .hero-eyebrow span{display:block;width:32px;height:1px;background:var(--gold);opacity:.8}
+
+  h1{
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(3.2rem,5.8vw,5.8rem);
+    font-weight:300;line-height:1.04;
+    color:var(--text);margin-bottom:1.6rem;
+  }
+  h1 .line-italic{
+    display:block;font-style:italic;
+    color:var(--gold-light);font-weight:300;
+  }
+
+  .hero-sub{
+    font-size:1rem;line-height:1.8;color:var(--text-muted);
+    max-width:420px;margin-bottom:2.8rem;font-weight:300;
+  }
+
+  .hero-actions{display:flex;align-items:center;gap:1.75rem;flex-wrap:wrap;margin-bottom:3.5rem}
+
+  .btn-primary{
+    display:inline-flex;align-items:center;gap:.55rem;
+    background:var(--gold);color:var(--ink);
+    font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;
+    letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+    padding:.9rem 2.1rem;border-radius:1px;
+    transition:background .2s,transform .15s;
+  }
+  .btn-primary:hover{background:var(--gold-light);transform:translateY(-1px)}
+
+  .btn-ghost{
+    display:inline-flex;align-items:center;gap:.5rem;
+    font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--text-muted);text-decoration:none;
+    transition:color .2s;
+  }
+  .btn-ghost svg{transition:transform .2s}
+  .btn-ghost:hover{color:var(--text)}
+  .btn-ghost:hover svg{transform:translateX(3px)}
+
+  /* Trust badges */
+  .hero-badges{
+    display:flex;align-items:center;gap:2.5rem;
+    padding-top:2.25rem;border-top:1px solid var(--border-soft);
+  }
+  .badge{display:flex;align-items:center;gap:.75rem}
+  .badge-icon{
+    width:36px;height:36px;border:1px solid var(--gold-dim);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .badge-text{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);line-height:1.4}
+
+  /* ── DIVIDER ── */
+  .section-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:0 4rem}
+
+  /* ── SERVICES ── */
+  .services{padding:7rem 4rem}
+  .section-label{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem}
+  h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.5vw,3.2rem);font-weight:300;line-height:1.12;color:var(--text)}
+  h2 em{font-style:italic;color:var(--gold-light)}
+
+  .services-header{
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:2rem;align-items:end;margin-bottom:4rem;
+  }
+  .services-header-right{
+    font-size:.92rem;line-height:1.8;color:var(--text-muted);font-weight:300;
+    max-width:380px;justify-self:end;
+  }
+
+  /* 3-column service cards (ChatGPT layout) */
+  .services-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:1px;background:var(--border-soft);border:1px solid var(--border-soft);
+  }
+  .service-card{
+    background:var(--ink-soft);padding:2.75rem 2.25rem 2.25rem;
+    position:relative;overflow:hidden;
+    display:flex;flex-direction:column;gap:1rem;
+    transition:background .3s;
+  }
+  .service-card::after{
+    content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:var(--gold);transform:scaleX(0);transform-origin:left;
+    transition:transform .45s ease;
+  }
+  .service-card:hover{background:var(--surface-lift)}
+  .service-card:hover::after{transform:scaleX(1)}
+
+  .service-icon-wrap{margin-bottom:.5rem}
+  h3{
+    font-family:'Cormorant Garamond',serif;font-size:1.4rem;
+    font-weight:400;color:var(--text);line-height:1.2;
+  }
+  .service-desc{font-size:.875rem;line-height:1.72;color:var(--text-muted);font-weight:300;flex:1}
+  .service-link{
+    display:inline-flex;align-items:center;gap:.45rem;
+    font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--gold-dim);text-decoration:none;margin-top:.5rem;
+    transition:color .2s;
+  }
+  .service-link svg{transition:transform .2s}
+  .service-link:hover{color:var(--gold)}
+  .service-link:hover svg{transform:translateX(3px)}
+
+  /* ── CLIENTS ── */
+  .clients{padding:7rem 4rem;background:var(--ink-soft)}
+  .clients-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-top:4rem}
+  .client-list{display:flex;flex-direction:column;gap:1.25rem}
+  .client-item{
+    display:flex;align-items:flex-start;gap:1rem;
+    padding:1.5rem;border:1px solid var(--border-soft);
+    background:var(--surface);transition:border-color .3s;
+  }
+  .client-item:hover{border-color:var(--border)}
+  .client-text h4{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:var(--text);margin-bottom:.3rem}
+  .client-text p{font-size:.84rem;color:var(--text-muted);font-weight:300;line-height:1.6}
+  .region-label{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:1.1rem}
+  .region-flags{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem}
+  .flag-pill{
+    display:inline-flex;align-items:center;gap:.45rem;
+    padding:.5rem 1rem;border:1px solid var(--border-soft);
+    font-size:.82rem;color:var(--text-muted);
+    transition:border-color .2s,color .2s;
+  }
+  .flag-pill:hover{border-color:var(--gold-dim);color:var(--text)}
+  .region-quote{
+    padding:1.75rem;border-left:2px solid var(--gold-dim);
+    background:var(--surface);margin-bottom:1.5rem;
+  }
+  .region-quote p{
+    font-family:'Cormorant Garamond',serif;font-size:1.2rem;
+    font-style:italic;font-weight:300;color:var(--text);
+    line-height:1.55;margin-bottom:.6rem;
+  }
+  .region-quote span{font-size:.75rem;letter-spacing:.08em;color:var(--text-dim);text-transform:uppercase}
+
+  /* ── TOOLS ── */
+  .tools{
+    padding:3.5rem 4rem;background:var(--surface);
+    border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft);
+  }
+  .tools-inner{display:flex;align-items:center;gap:3rem;flex-wrap:wrap}
+  .tools-label{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);white-space:nowrap;flex-shrink:0}
+  .tools-list{display:flex;align-items:center;gap:2.25rem;flex-wrap:wrap}
+  .tool-name{font-size:.88rem;color:var(--text-muted);letter-spacing:.04em;transition:color .2s}
+  .tool-name:hover{color:var(--gold)}
+
+  /* ── PROCESS ── */
+  .process{padding:7rem 4rem}
+  .process-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    gap:0;margin-top:4rem;position:relative;
+  }
+  .process-grid::before{
+    content:'';position:absolute;top:39px;left:12.5%;right:12.5%;
+    height:1px;background:var(--gold-dim);opacity:.3;z-index:0;
+  }
+  .process-step{padding:0 1.5rem;position:relative;z-index:1}
+  .step-icon{width:78px;height:78px;margin-bottom:1.4rem}
+  .step-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--text);margin-bottom:.55rem}
+  .step-desc{font-size:.84rem;color:var(--text-muted);line-height:1.65;font-weight:300}
+
+  /* ── PRICING ── */
+  .pricing{padding:7rem 4rem;background:var(--ink-soft)}
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:4rem;gap:2rem}
+  .section-desc{max-width:340px;font-size:.9rem;line-height:1.75;color:var(--text-muted);font-weight:300;flex-shrink:0}
+  .pricing-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:1px;background:var(--border-soft);border:1px solid var(--border-soft);
+  }
+  .price-card{background:var(--ink-soft);padding:2.5rem 2rem;position:relative}
+  .price-card.featured{background:var(--surface-lift);border:1px solid var(--gold-dim);margin:-1px;z-index:1}
+  .price-tag{display:inline-block;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,.1);padding:.28rem .75rem;margin-bottom:1.5rem}
+  .price-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--text);margin-bottom:.2rem}
+  .price-txn{font-size:.8rem;color:var(--text-dim);font-weight:300;margin-bottom:.5rem}
+  .price-amount{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--text);line-height:1;margin:1rem 0}
+  .price-amount sup{font-size:1.2rem;vertical-align:top;margin-top:.5rem;color:var(--gold)}
+  .price-period{font-size:.8rem;color:var(--text-dim);margin-bottom:1.5rem}
+  .price-divider{height:1px;background:var(--border-soft);margin:1.5rem 0}
+  .price-features{list-style:none;display:flex;flex-direction:column;gap:.72rem;margin-bottom:2rem}
+  .price-features li{font-size:.875rem;color:var(--text-muted);display:flex;align-items:flex-start;gap:.6rem;font-weight:300;line-height:1.5}
+  .price-features li::before{content:'—';color:var(--gold-dim);flex-shrink:0;font-size:.75rem;margin-top:2px}
+  .price-cta{display:block;text-align:center;padding:.85rem;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:.2s}
+  .price-card:not(.featured) .price-cta{border:1px solid var(--text-dim);color:var(--text-muted)}
+  .price-card:not(.featured) .price-cta:hover{border-color:var(--gold-dim);color:var(--gold)}
+  .price-card.featured .price-cta{background:var(--gold);color:var(--ink);font-weight:500}
+  .price-card.featured .price-cta:hover{background:var(--gold-light)}
+
+  /* ── CTA BAND (ChatGPT strip style) ── */
+  .cta-band{
+    padding:4.5rem 4rem;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:3rem;flex-wrap:wrap;
+    background:var(--surface);
+    border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+    position:relative;overflow:hidden;
+  }
+  .cta-band::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse 50% 100% at 50% 50%,rgba(201,168,76,0.04) 0%,transparent 70%);
+  }
+  .cta-left{position:relative;z-index:1}
+  .cta-left .cta-icon{
+    width:52px;height:52px;border:1px solid var(--gold-dim);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;
+  }
+  .cta-left h2{
+    font-size:clamp(1.6rem,2.5vw,2.4rem);
+    max-width:520px;margin-bottom:.6rem;
+  }
+  .cta-left p{font-size:.92rem;color:var(--text-muted);font-weight:300}
+  .cta-right{position:relative;z-index:1;flex-shrink:0}
+  .cta-right .btn-primary{font-size:.82rem;padding:1rem 2.4rem}
+
+  /* ── FOOTER ── */
+  footer{
+    padding:2.75rem 4rem;border-top:1px solid var(--border-soft);
+    display:flex;align-items:center;justify-content:space-between;
+    flex-wrap:wrap;gap:1.5rem;
+  }
+  .footer-brand{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:300;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
+  .footer-links{display:flex;gap:2rem;list-style:none}
+  .footer-links a{font-size:.75rem;color:var(--text-dim);text-decoration:none;letter-spacing:.07em;transition:color .2s}
+  .footer-links a:hover{color:var(--gold)}
+  .footer-copy{font-size:.72rem;color:var(--text-dim)}
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+  .hero-eyebrow{animation:fadeUp .65s ease both}
+  .hero h1{animation:fadeUp .65s ease .1s both}
+  .hero-sub{animation:fadeUp .65s ease .2s both}
+  .hero-actions{animation:fadeUp .65s ease .3s both}
+  .hero-badges{animation:fadeUp .65s ease .42s both}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:960px){
+    nav{padding:1rem 1.5rem}
+    .nav-links{display:none}
+    .hero,.services,.clients,.process,.tools,.pricing,.cta-band,footer{padding-left:1.5rem;padding-right:1.5rem}
+    .section-divider{margin:0 1.5rem}
+    .services-header,.clients-grid{grid-template-columns:1fr}
+    .services-grid,.pricing-grid{grid-template-columns:1fr}
+    .process-grid{grid-template-columns:1fr 1fr;gap:2.5rem}
+    .process-grid::before{display:none}
+    .section-head{flex-direction:column}
+    .cta-band{flex-direction:column;text-align:center}
+    .cta-left .cta-icon{margin:0 auto 1.25rem}
+    footer{flex-direction:column;align-items:flex-start}
+    .hero-scene{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="data:image/png;base64,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" alt="Eclipse Bookkeeping">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#clients">About</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#process">Resources</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="nav-cta">Book a Call</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <!-- Right-side pictorial scene -->
+  <div class="hero-scene">
+    <svg viewBox="0 0 560 520" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:90%;max-width:560px">
+      <!-- Glowing eclipse corona -->
+      <circle cx="290" cy="240" r="195" stroke="#C9A84C" stroke-width="0.6" opacity="0.1"/>
+      <circle cx="290" cy="240" r="160" stroke="#C9A84C" stroke-width="0.5" opacity="0.08"/>
+      <!-- Eclipse glow arc (top-left crescent) -->
+      <path d="M140 140 A160 160 0 0 1 290 80" stroke="#C9A84C" stroke-width="2.5" opacity="0.55" stroke-linecap="round"/>
+      <path d="M130 155 A175 175 0 0 1 290 65" stroke="#C9A84C" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+      <path d="M150 127 A148 148 0 0 1 290 95" stroke="#C9A84C" stroke-width="0.8" opacity="0.18" stroke-linecap="round"/>
+      <!-- Moon body (dark circle covering sun) -->
+      <circle cx="310" cy="240" r="170" fill="#0D0D10"/>
+      <!-- Corona rays -->
+      <line x1="120" y1="130" x2="95" y2="106" stroke="#C9A84C" stroke-width="0.8" opacity="0.35"/>
+      <line x1="133" y1="112" x2="112" y2="84" stroke="#C9A84C" stroke-width="0.6" opacity="0.28"/>
+      <line x1="150" y1="97" x2="134" y2="68" stroke="#C9A84C" stroke-width="0.5" opacity="0.22"/>
+      <line x1="108" y1="150" x2="79" y2="138" stroke="#C9A84C" stroke-width="0.6" opacity="0.25"/>
+      <line x1="100" y1="175" x2="70" y2="170" stroke="#C9A84C" stroke-width="0.5" opacity="0.2"/>
+
+      <!-- ── Ledger book ── -->
+      <g transform="translate(180,200) rotate(-8)">
+        <rect x="0" y="0" width="130" height="170" rx="3" fill="#161618" stroke="#C9A84C" stroke-width="0.8" opacity="0.7"/>
+        <rect x="0" y="0" width="14" height="170" rx="2" fill="#C9A84C" opacity="0.18"/>
+        <rect x="16" y="18" width="95" height="4" rx="2" fill="#C9A84C" opacity="0.55"/>
+        <rect x="16" y="28" width="60" height="2.5" rx="1" fill="#C9A84C" opacity="0.28"/>
+        <rect x="16" y="48" width="95" height="1" fill="#ffffff" opacity="0.06"/>
+        <rect x="16" y="58" width="55" height="2.5" rx="1" fill="#ffffff" opacity="0.15"/>
+        <rect x="82" y="57" width="29" height="2.5" rx="1" fill="#C9A84C" opacity="0.4"/>
+        <rect x="16" y="68" width="40" height="2.5" rx="1" fill="#ffffff" opacity="0.1"/>
+        <rect x="82" y="67" width="29" height="2.5" rx="1" fill="#ffffff" opacity="0.18"/>
+        <rect x="16" y="78" width="95" height="1" fill="#ffffff" opacity="0.05"/>
+        <rect x="16" y="88" width="50" height="2.5" rx="1" fill="#ffffff" opacity="0.1"/>
+        <rect x="82" y="87" width="29" height="2.5" rx="1" fill="#C9A84C" opacity="0.35"/>
+        <rect x="16" y="98" width="95" height="1" fill="#ffffff" opacity="0.05"/>
+        <text x="30" y="145" font-family="'Cormorant Garamond',serif" font-size="10" fill="#C9A84C" opacity="0.5" letter-spacing="3">LEDGER</text>
+      </g>
+
+      <!-- ── Monthly report paper ── -->
+      <g transform="translate(265,270) rotate(5)">
+        <rect x="0" y="0" width="150" height="115" rx="2" fill="#1A1A1C" stroke="#C9A84C" stroke-width="0.6" opacity="0.55"/>
+        <rect x="12" y="12" width="80" height="3.5" rx="1.5" fill="#C9A84C" opacity="0.5"/>
+        <rect x="12" y="20" width="50" height="2" rx="1" fill="#C9A84C" opacity="0.25"/>
+        <!-- Bar chart -->
+        <rect x="12" y="60" width="14" height="32" rx="1" fill="#C9A84C" opacity="0.2"/>
+        <rect x="30" y="72" width="14" height="20" rx="1" fill="#C9A84C" opacity="0.2"/>
+        <rect x="48" y="52" width="14" height="40" rx="1" fill="#C9A84C" opacity="0.4"/>
+        <rect x="66" y="62" width="14" height="30" rx="1" fill="#C9A84C" opacity="0.25"/>
+        <rect x="84" y="46" width="14" height="46" rx="1" fill="#C9A84C" opacity="0.55"/>
+        <!-- Donut chart -->
+        <circle cx="125" cy="70" r="22" stroke="#C9A84C" stroke-width="6" stroke-dasharray="60 80" opacity="0.5" transform="rotate(-90 125 70)"/>
+        <circle cx="125" cy="70" r="22" stroke="#C9A84C" stroke-width="6" stroke-dasharray="30 110" stroke-dashoffset="-60" opacity="0.28" transform="rotate(-90 125 70)"/>
+        <circle cx="125" cy="70" r="14" fill="#1A1A1C"/>
+        <text x="122" y="74" font-size="7" fill="#C9A84C" opacity="0.7" font-family="sans-serif">%</text>
+      </g>
+
+      <!-- ── Calculator ── -->
+      <g transform="translate(370,160) rotate(6)">
+        <rect x="0" y="0" width="85" height="120" rx="5" fill="#141416" stroke="#C9A84C" stroke-width="0.7" opacity="0.6"/>
+        <rect x="8" y="8" width="69" height="28" rx="2" fill="#C9A84C" opacity="0.1"/>
+        <rect x="14" y="16" width="45" height="8" rx="1" fill="#C9A84C" opacity="0.4"/>
+        <!-- Buttons grid -->
+        <rect x="10" y="44" width="16" height="10" rx="2" fill="#C9A84C" opacity="0.12"/>
+        <rect x="30" y="44" width="16" height="10" rx="2" fill="#C9A84C" opacity="0.12"/>
+        <rect x="50" y="44" width="25" height="10" rx="2" fill="#C9A84C" opacity="0.2"/>
+        <rect x="10" y="58" width="16" height="10" rx="2" fill="#C9A84C" opacity="0.12"/>
+        <rect x="30" y="58" width="16" height="10" rx="2" fill="#C9A84C" opacity="0.12"/>
+        <rect x="50" y="58" width="25" height="10" rx="2" fill="#C9A84C" opacity="0.12"/>
+        <rect x="10" y="72" width="16" height="10" rx="2" fill="#C9A84C" opacity="0.12"/>
+        <rect x="30" y="72" width="16" height="10" rx="2" fill="#C9A84C" opacity="0.12"/>
+        <rect x="50" y="72" width="25" height="24" rx="2" fill="#C9A84C" opacity="0.28"/>
+        <rect x="10" y="86" width="36" height="10" rx="2" fill="#C9A84C" opacity="0.18"/>
+      </g>
+
+      <!-- ── Pen ── -->
+      <g transform="translate(200,370) rotate(-20)">
+        <rect x="0" y="0" width="6" height="110" rx="3" fill="#C9A84C" opacity="0.35"/>
+        <polygon points="0,110 6,110 3,124" fill="#C9A84C" opacity="0.5"/>
+        <rect x="0" y="0" width="6" height="12" rx="3" fill="#C9A84C" opacity="0.6"/>
+      </g>
+
+      <!-- Subtle gold dust particles -->
+      <circle cx="155" cy="95" r="1.5" fill="#C9A84C" opacity="0.4"/>
+      <circle cx="170" cy="78" r="1" fill="#C9A84C" opacity="0.3"/>
+      <circle cx="142" cy="200" r="1.2" fill="#C9A84C" opacity="0.25"/>
+      <circle cx="430" cy="310" r="1.5" fill="#C9A84C" opacity="0.3"/>
+      <circle cx="415" cy="155" r="1" fill="#C9A84C" opacity="0.25"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span></span>Precision. Clarity. Results.</div>
+
+    <h1>
+      Financial clarity.<br>
+      Business focus.<br>
+      <span class="line-italic">Lasting growth.</span>
+    </h1>
+
+    <p class="hero-sub">We handle the numbers behind your business so you can focus on what you do best.</p>
+
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">
+        Book a Call
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#services" class="btn-ghost">
+        Our Services
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="hero-badges">
+      <div class="badge">
+        <div class="badge-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10 6h5l-4 3 1.5 5L8 12l-4.5 3L5 10 1 7h5z" stroke="#C9A84C" stroke-width="1" fill="none"/></svg>
+        </div>
+        <div class="badge-text">Trusted by<br>Small Businesses</div>
+      </div>
+      <div class="badge">
+        <div class="badge-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#C9A84C" stroke-width="1"/><polyline points="8,4 8,8 11,10" stroke="#C9A84C" stroke-width="1" stroke-linecap="round"/></svg>
+        </div>
+        <div class="badge-text">Accurate &amp;<br>On Time</div>
+      </div>
+      <div class="badge">
+        <div class="badge-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="9" width="3" height="5" rx="0.5" fill="#C9A84C" opacity="0.6"/><rect x="6.5" y="6" width="3" height="8" rx="0.5" fill="#C9A84C" opacity="0.7"/><rect x="11" y="3" width="3" height="11" rx="0.5" fill="#C9A84C" opacity="0.9"/></svg>
+        </div>
+        <div class="badge-text">Insights That<br>Drive Growth</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══ SERVICES ═══ -->
+<section class="services" id="services">
+  <div class="services-header">
+    <div>
+      <p class="section-label">Services</p>
+      <h2>Bookkeeping that moves<br>your business <em>forward.</em></h2>
+    </div>
+    <p class="services-header-right">From day-to-day bookkeeping to strategic reporting, we provide the support and insights you need to grow with confidence.</p>
+  </div>
+
+  <div class="services-grid">
+
+    <!-- Monthly Bookkeeping -->
+    <div class="service-card">
+      <div class="service-icon-wrap">
+        <svg width="54" height="48" viewBox="0 0 54 48" fill="none">
+          <rect x="1" y="7" width="44" height="38" rx="3" stroke="#C9A84C" stroke-width="1" opacity="0.65"/>
+          <rect x="1" y="7" width="44" height="11" rx="3" fill="#C9A84C" opacity="0.1"/>
+          <line x1="1" y1="18" x2="45" y2="18" stroke="#C9A84C" stroke-width="0.7" opacity="0.4"/>
+          <rect x="9" y="1" width="3.5" height="10" rx="1.75" fill="#C9A84C" opacity="0.65"/>
+          <rect x="33" y="1" width="3.5" height="10" rx="1.75" fill="#C9A84C" opacity="0.65"/>
+          <circle cx="11" cy="26" r="2" fill="#C9A84C" opacity="0.45"/>
+          <circle cx="20" cy="26" r="2" fill="#C9A84C" opacity="0.45"/>
+          <circle cx="29" cy="26" r="2" fill="#C9A84C" opacity="0.45"/>
+          <circle cx="11" cy="35" r="2" fill="#C9A84C" opacity="0.45"/>
+          <circle cx="20" cy="35" r="2" fill="#C9A84C" opacity="0.45"/>
+          <circle cx="29" cy="35" r="2.5" fill="#C9A84C" opacity="0.9"/>
+          <circle cx="38" cy="35" r="2" fill="#C9A84C" opacity="0.45"/>
+          <!-- Checkmark badge -->
+          <circle cx="43" cy="37" r="8" fill="#141417" stroke="#C9A84C" stroke-width="0.8"/>
+          <polyline points="39,37 42,40.5 47,34" stroke="#C9A84C" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3>Monthly Bookkeeping</h3>
+      <p class="service-desc">Accurate, up-to-date records so you always know where your business stands. No backlogs, no surprises.</p>
+      <a href="#contact" class="service-link">
+        Learn More
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M7 2l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <!-- Financial Reporting -->
+    <div class="service-card">
+      <div class="service-icon-wrap">
+        <svg width="54" height="48" viewBox="0 0 54 48" fill="none">
+          <!-- Pie/donut -->
+          <circle cx="22" cy="24" r="18" stroke="#C9A84C" stroke-width="1" opacity="0.5" fill="none"/>
+          <circle cx="22" cy="24" r="18" stroke="#C9A84C" stroke-width="7" stroke-dasharray="48 65" opacity="0.55" fill="none" transform="rotate(-90 22 24)"/>
+          <circle cx="22" cy="24" r="18" stroke="#C9A84C" stroke-width="7" stroke-dasharray="28 85" stroke-dashoffset="-48" opacity="0.3" fill="none" transform="rotate(-90 22 24)"/>
+          <circle cx="22" cy="24" r="10" fill="#111114"/>
+          <!-- Trend line out -->
+          <polyline points="36,20 42,14 48,16 52,10" stroke="#C9A84C" stroke-width="1.3" fill="none" opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="52" cy="10" r="2.5" fill="#C9A84C" opacity="0.9"/>
+        </svg>
+      </div>
+      <h3>Financial Reporting</h3>
+      <p class="service-desc">Clear reports and dashboards that turn numbers into powerful insights — P&amp;L, Balance Sheet, Cash Flow.</p>
+      <a href="#contact" class="service-link">
+        Learn More
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M7 2l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <!-- Payroll & Compliance -->
+    <div class="service-card">
+      <div class="service-icon-wrap">
+        <svg width="54" height="48" viewBox="0 0 54 48" fill="none">
+          <!-- Folder -->
+          <path d="M2 12 L2 42 L48 42 L48 18 L24 18 L20 12 Z" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.65"/>
+          <path d="M2 20 L48 20" stroke="#C9A84C" stroke-width="0.7" opacity="0.35"/>
+          <!-- Shield inside -->
+          <path d="M25 24 L34 27 L34 34 C34 38 25 42 25 42 C25 42 16 38 16 34 L16 27 Z" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.7"/>
+          <polyline points="20,33 24,37 30,29" stroke="#C9A84C" stroke-width="1.4" fill="none" opacity="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3>Payroll &amp; Compliance</h3>
+      <p class="service-desc">Reliable payroll bookkeeping and compliance support to keep your business protected and audit-ready.</p>
+      <a href="#contact" class="service-link">
+        Learn More
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M7 2l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Secondary 3 -->
+  <div class="services-grid" style="margin-top:1px">
+    <div class="service-card">
+      <div class="service-icon-wrap">
+        <svg width="54" height="48" viewBox="0 0 54 48" fill="none">
+          <rect x="4" y="3" width="36" height="42" rx="3" stroke="#C9A84C" stroke-width="1" opacity="0.6"/>
+          <path d="M32 3 L40 11 L32 11 Z" fill="#C9A84C" opacity="0.15"/>
+          <path d="M32 3 L40 11" stroke="#C9A84C" stroke-width="0.8" opacity="0.5"/>
+          <rect x="11" y="18" width="22" height="2.5" rx="1" fill="#C9A84C" opacity="0.5"/>
+          <rect x="11" y="25" width="16" height="2" rx="1" fill="#C9A84C" opacity="0.3"/>
+          <polyline points="11,38 17,32 23,34 31,27" stroke="#C9A84C" stroke-width="1.3" fill="none" opacity="0.8" stroke-linecap="round"/>
+          <circle cx="31" cy="27" r="2" fill="#C9A84C" opacity="0.9"/>
+        </svg>
+      </div>
+      <h3>Tax-Ready Reporting</h3>
+      <p class="service-desc">We deliver your books in exactly the state your accountant needs — saving time and reducing your filing costs.</p>
+      <a href="#contact" class="service-link">Learn More <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M7 2l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon-wrap">
+        <svg width="54" height="48" viewBox="0 0 54 48" fill="none">
+          <rect x="2" y="20" width="28" height="5" rx="1" stroke="#C9A84C" stroke-width="0.8" opacity="0.3" transform="rotate(-5 2 20)"/>
+          <rect x="4" y="17" width="28" height="5" rx="1" stroke="#C9A84C" stroke-width="0.8" opacity="0.25" transform="rotate(3 4 17)"/>
+          <line x1="33" y1="23" x2="39" y2="23" stroke="#C9A84C" stroke-width="1.2" opacity="0.6"/>
+          <polyline points="37,20 40,23 37,26" stroke="#C9A84C" stroke-width="1.2" fill="none" opacity="0.6" stroke-linecap="round"/>
+          <rect x="41" y="10" width="11" height="3.5" rx="1" fill="#C9A84C" opacity="0.28"/>
+          <rect x="41" y="17" width="11" height="3.5" rx="1" fill="#C9A84C" opacity="0.48"/>
+          <rect x="41" y="24" width="11" height="3.5" rx="1" fill="#C9A84C" opacity="0.68"/>
+          <rect x="41" y="31" width="11" height="3.5" rx="1" fill="#C9A84C" opacity="0.38"/>
+        </svg>
+      </div>
+      <h3>Books Cleanup</h3>
+      <p class="service-desc">Inherited messy records? We untangle years of uncategorized transactions, duplicates, and mismatched accounts.</p>
+      <a href="#contact" class="service-link">Learn More <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M7 2l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon-wrap">
+        <svg width="54" height="48" viewBox="0 0 54 48" fill="none">
+          <path d="M2 22 C2 14 14 10 20 16" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.65" stroke-linecap="round"/>
+          <path d="M20 16 C26 22 38 18 38 10" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.65" stroke-linecap="round"/>
+          <path d="M38 10 C44 4 52 8 52 16" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.65" stroke-linecap="round"/>
+          <circle cx="2" cy="22" r="3" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.7"/>
+          <circle cx="20" cy="16" r="3" stroke="#C9A84C" stroke-width="1" fill="#C9A84C" opacity="0.5"/>
+          <circle cx="38" cy="10" r="3" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.7"/>
+          <circle cx="52" cy="16" r="3" stroke="#C9A84C" stroke-width="1" fill="#C9A84C" opacity="0.7"/>
+          <rect x="5" y="32" width="44" height="1" fill="#C9A84C" opacity="0.15"/>
+          <rect x="8" y="36" width="8" height="3" rx="1" fill="#C9A84C" opacity="0.3"/>
+          <rect x="22" y="36" width="8" height="3" rx="1" fill="#C9A84C" opacity="0.3"/>
+          <rect x="36" y="36" width="8" height="3" rx="1" fill="#C9A84C" opacity="0.3"/>
+        </svg>
+      </div>
+      <h3>AP &amp; AR Management</h3>
+      <p class="service-desc">Track what you owe and what you're owed — keeping cash flow visible and vendor relationships healthy.</p>
+      <a href="#contact" class="service-link">Learn More <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M7 2l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══ CLIENTS ═══ -->
+<section class="clients" id="clients">
+  <p class="section-label">Who We Serve</p>
+  <div class="clients-grid">
+    <div>
+      <h2 style="margin-bottom:2rem">Built for the<br><em>businesses</em> that build</h2>
+      <div class="client-list">
+        <div class="client-item">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style="flex-shrink:0;margin-top:2px"><circle cx="11" cy="11" r="10" stroke="#C9A84C" stroke-width="1"/><path d="M7 11l3 3 5-5" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="client-text"><h4>Startups &amp; Early-Stage Companies</h4><p>Clean books from day one, investor-ready reports, and a financial foundation for growth.</p></div>
+        </div>
+        <div class="client-item">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style="flex-shrink:0;margin-top:2px"><circle cx="11" cy="11" r="10" stroke="#C9A84C" stroke-width="1"/><path d="M7 11l3 3 5-5" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="client-text"><h4>Freelancers &amp; Solopreneurs</h4><p>Separate personal and business finances, stay prepared for tax season year-round.</p></div>
+        </div>
+        <div class="client-item">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style="flex-shrink:0;margin-top:2px"><circle cx="11" cy="11" r="10" stroke="#C9A84C" stroke-width="1"/><path d="M7 11l3 3 5-5" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="client-text"><h4>Established Small Businesses</h4><p>Ongoing monthly support to keep operations financially organized and audit-ready.</p></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="region-label">Markets We Serve</p>
+      <div class="region-flags">
+        <div class="flag-pill">🇺🇸 United States</div>
+        <div class="flag-pill">🇨🇦 Canada</div>
+        <div class="flag-pill">🇬🇧 United Kingdom</div>
+      </div>
+      <div class="region-quote">
+        <p>"Eclipse gave me the clarity I needed to finally see where my money was going — and where it should go next."</p>
+        <span>— Small business owner, Ontario CA</span>
+      </div>
+      <div style="padding:1.5rem;border:1px solid rgba(201,168,76,0.1);background:var(--surface)">
+        <p style="font-size:.82rem;color:var(--text-muted);line-height:1.75;font-weight:300">We operate fully remote — no office required, no time-zone friction. Secure file sharing, video calls, and cloud accounting mean your books are updated wherever you are.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TOOLS ═══ -->
+<div class="tools">
+  <div class="tools-inner">
+    <span class="tools-label">We work with</span>
+    <div class="tools-list">
+      <span class="tool-name">QuickBooks Online</span>
+      <span class="tool-name">QuickBooks Desktop</span>
+      <span class="tool-name">Xero</span>
+      <span class="tool-name">Wave</span>
+      <span class="tool-name">FreshBooks</span>
+      <span class="tool-name">Excel / Google Sheets</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROCESS ═══ -->
+<section class="process" id="process">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:0;gap:2rem;flex-wrap:wrap">
+    <div>
+      <p class="section-label">How It Works</p>
+      <h2>Simple from<br>day <em>one</em></h2>
+    </div>
+    <p style="max-width:320px;font-size:.9rem;line-height:1.75;color:var(--text-muted);font-weight:300">We make onboarding painless and get your books clean fast.</p>
+  </div>
+  <div class="process-grid">
+    <div class="process-step">
+      <div class="step-icon">
+        <svg viewBox="0 0 78 78" fill="none"><circle cx="39" cy="39" r="37" stroke="#C9A84C" stroke-width="0.7" opacity="0.2"/><circle cx="39" cy="27" r="9" stroke="#C9A84C" stroke-width="1.2" opacity="0.8"/><path d="M21 57 C21 46 57 46 57 57" stroke="#C9A84C" stroke-width="1.2" fill="none" opacity="0.8"/><circle cx="59" cy="19" r="10" fill="#141417" stroke="#C9A84C" stroke-width="0.8"/><text x="59" y="23" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="#C9A84C">1</text></svg>
+      </div>
+      <h3 class="step-title">Discovery Call</h3>
+      <p class="step-desc">30 minutes to understand your business, current books, and what you actually need.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-icon">
+        <svg viewBox="0 0 78 78" fill="none"><circle cx="39" cy="39" r="37" stroke="#C9A84C" stroke-width="0.7" opacity="0.2"/><path d="M17 24 L17 56 L39 53 L61 56 L61 24 L39 28 Z" stroke="#C9A84C" stroke-width="1.2" fill="none" opacity="0.7"/><line x1="39" y1="28" x2="39" y2="53" stroke="#C9A84C" stroke-width="1" opacity="0.45"/><rect x="21" y="31" width="13" height="2" rx="1" fill="#C9A84C" opacity="0.4"/><rect x="21" y="37" width="9" height="2" rx="1" fill="#C9A84C" opacity="0.3"/><rect x="43" y="31" width="13" height="2" rx="1" fill="#C9A84C" opacity="0.4"/><circle cx="54" cy="51" r="8" stroke="#C9A84C" stroke-width="1.3" opacity="0.9"/><line x1="60" y1="57" x2="65" y2="63" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" opacity="0.8"/><circle cx="59" cy="19" r="10" fill="#141417" stroke="#C9A84C" stroke-width="0.8"/><text x="59" y="23" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="#C9A84C">2</text></svg>
+      </div>
+      <h3 class="step-title">Books Review</h3>
+      <p class="step-desc">We audit your records, identify gaps, and give you a clear picture of what needs to be done.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-icon">
+        <svg viewBox="0 0 78 78" fill="none"><circle cx="39" cy="39" r="37" stroke="#C9A84C" stroke-width="0.7" opacity="0.2"/><path d="M23 49 C15 49 15 37 23 37 C23 29 35 25 41 31 C43 27 53 27 53 35 C59 35 59 49 53 49 Z" stroke="#C9A84C" stroke-width="1.2" fill="none" opacity="0.75"/><line x1="39" y1="54" x2="39" y2="39" stroke="#C9A84C" stroke-width="1.3" opacity="0.8"/><polyline points="33,45 39,39 45,45" stroke="#C9A84C" stroke-width="1.3" fill="none" opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="59" cy="19" r="10" fill="#141417" stroke="#C9A84C" stroke-width="0.8"/><text x="59" y="23" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="#C9A84C">3</text></svg>
+      </div>
+      <h3 class="step-title">Onboarding</h3>
+      <p class="step-desc">We connect to your accounting software, configure access, and get everything set to our workflow.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-icon">
+        <svg viewBox="0 0 78 78" fill="none"><circle cx="39" cy="39" r="37" stroke="#C9A84C" stroke-width="0.7" opacity="0.2"/><path d="M39 19 C53 19 61 29 59 43" stroke="#C9A84C" stroke-width="1.3" fill="none" opacity="0.8" stroke-linecap="round"/><polyline points="55,42 59,43 61,39" stroke="#C9A84C" stroke-width="1.3" fill="none" opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M39 59 C25 59 17 49 19 35" stroke="#C9A84C" stroke-width="1.3" fill="none" opacity="0.8" stroke-linecap="round"/><polyline points="23,36 19,35 17,39" stroke="#C9A84C" stroke-width="1.3" fill="none" opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="39" cy="39" r="6" stroke="#C9A84C" stroke-width="1" opacity="0.7"/><circle cx="39" cy="39" r="2.5" fill="#C9A84C" opacity="0.8"/><circle cx="59" cy="19" r="10" fill="#141417" stroke="#C9A84C" stroke-width="0.8"/><text x="59" y="23" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="#C9A84C">4</text></svg>
+      </div>
+      <h3 class="step-title">Ongoing Care</h3>
+      <p class="step-desc">Monthly updates, reports, and a direct line to your bookkeeper whenever you have questions.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══ PRICING ═══ -->
+<section class="pricing" id="pricing">
+  <div class="section-head">
+    <div>
+      <p class="section-label">Pricing</p>
+      <h2>Transparent.<br><em>Flat-rate.</em> No surprises.</h2>
+    </div>
+    <p class="section-desc">All plans include monthly reconciliation, reporting, and direct communication with your bookkeeper.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <p class="price-name">Starter</p>
+      <p class="price-txn">Up to 75 transactions/mo</p>
+      <div class="price-amount"><sup>$</sup>149</div>
+      <p class="price-period">per month</p>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>Monthly bank reconciliation</li>
+        <li>Income &amp; expense categorization</li>
+        <li>Monthly P&amp;L statement</li>
+        <li>Email support</li>
+        <li>QBO or Xero setup</li>
+      </ul>
+      <a href="#contact" class="price-cta">Get Started</a>
+    </div>
+    <div class="price-card featured">
+      <div class="price-tag">Most Popular</div>
+      <p class="price-name">Growth</p>
+      <p class="price-txn">Up to 200 transactions/mo</p>
+      <div class="price-amount"><sup>$</sup>299</div>
+      <p class="price-period">per month</p>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>Everything in Starter</li>
+        <li>Full Balance Sheet</li>
+        <li>AP &amp; AR tracking</li>
+        <li>Monthly video call check-in</li>
+        <li>Tax-ready year-end package</li>
+      </ul>
+      <a href="#contact" class="price-cta">Get Started</a>
+    </div>
+    <div class="price-card">
+      <p class="price-name">Scale</p>
+      <p class="price-txn">200+ transactions/mo</p>
+      <div class="price-amount" style="font-size:2.2rem;padding-top:.4rem">Custom</div>
+      <p class="price-period">bespoke pricing</p>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>Everything in Growth</li>
+        <li>Multi-entity bookkeeping</li>
+        <li>Payroll journal entries</li>
+        <li>Cash flow reporting</li>
+        <li>Dedicated bookkeeper</li>
+      </ul>
+      <a href="#contact" class="price-cta">Let's Talk</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA STRIP (ChatGPT style) ═══ -->
+<section class="cta-band" id="contact">
+  <div class="cta-left">
+    <div class="cta-icon">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2" y="4" width="18" height="15" rx="2" stroke="#C9A84C" stroke-width="1"/><path d="M2 8h18" stroke="#C9A84C" stroke-width="0.8" opacity="0.5"/><rect x="6" y="12" width="3" height="3" rx="0.5" fill="#C9A84C" opacity="0.6"/><rect x="11" y="12" width="3" height="3" rx="0.5" fill="#C9A84C" opacity="0.4"/></svg>
+    </div>
+    <h2>Ready for clarity and<br><em>peace of mind?</em></h2>
+    <p>Let's build the financial foundation your business deserves.</p>
+  </div>
+  <div class="cta-right">
+    <a href="mailto:hello@eclipsebooks.co" class="btn-primary">
+      Book a Call
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <img src="data:image/png;base64,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" alt="Eclipse Bookkeeping" style="height:52px;width:auto;object-fit:contain;opacity:0.75;display:block;">
+  <ul class="footer-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#process">How It Works</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <span class="footer-copy">© 2026 Eclipse Bookkeeping. All rights reserved.</span>
+</footer>
+
+</body>
+</html>
